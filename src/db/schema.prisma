@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SUPERADMIN
+  ADMIN
+  LECTURER
+  STUDENT
+}
+
+enum DoneState {
+  DONE
+  NOTYET
+}
+
+model User {
+  id        String   @id @default(uuid())
+  nis       String   @unique
+  password  String
+  nama      String
+  role      Role     @default(STUDENT)
+  createdAt DateTime @default(now())
+  classes   Kelas[]
+}
+
+model MataPelajaran {
+  id        String  @id @default(uuid())
+  nama      String  @unique
+  deskripsi String
+  classes   Kelas[]
+}
+
+model Kelas {
+  id       String          @id @default(uuid())
+  nama     String          @unique
+  users    User[]
+  subjects MataPelajaran[]
+}
+
+model Tugas {
+  id        String    @id @default(uuid())
+  nama      String
+  deskripsi String
+  status    DoneState @default(NOTYET)
+}
+
+model Materi {
+  id        String    @id @default(uuid())
+  nama      String
+  deskripsi String
+  status    DoneState @default(NOTYET)
+  filename  String
+}
+
+model GuruInKelas {
+  userId    String
+  classId   String
+  subjectId String
+
+  @@id([userId, classId, subjectId])
+}
+
+model TugasInKelas {
+  exerciseId String
+  classId    String
+  subjectId  String
+
+  @@id([exerciseId, classId, subjectId])
+}
+
+model MateriInKelas {
+  lessonId  String
+  classId   String
+  subjectId String
+
+  @@id([lessonId, classId, subjectId])
+}

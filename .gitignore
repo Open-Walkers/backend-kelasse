@@ -1,0 +1,12 @@
+# node modules
+node_modules/
+
+# dotfiles
+.env
+
+# lock files
+yarn.lock
+package-lock.json
+
+# migration files
+/src/db/migrations/
